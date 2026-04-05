@@ -114,6 +114,7 @@
 
   <!-- Loading State -->
   <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+</div>
     <div class="skeleton h-96 w-full"></div>
     <div class="skeleton h-96 w-full"></div>
     <div class="skeleton h-64 w-full md:col-span-2"></div>
@@ -127,7 +128,7 @@
   </div>
 
   <!-- Results Grid (populated by JS) -->
-  <div id="results-grid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+    <div id="results-grid" class="hidden grid-cols-1 md:grid-cols-2 gap-8 items-start"></div>
   </div>
 
 </main>
@@ -172,6 +173,7 @@
 
   // ── Gemini API call ──────────────────────────────────────────────────────
   async function fetchRecommendations() {
+    sessionStorage.setItem('wib_story', story); // ← add this line
     const contextParts = [
       time           && `Time of day: ${time}`,
       price          && `Budget: ${price}`,
@@ -201,7 +203,7 @@ Respond ONLY with a valid JSON array — no markdown, no explanation, no preambl
 match should be a realistic number between 82 and 98. Make each place genuinely different in vibe and area.`;
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
