@@ -156,7 +156,11 @@
 </a>
 
 <script>
-  const GEMINI_API_KEY = CONFIG.GEMINI_API_KEY;
+  const res = await fetch('/api/recommend', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt })
+});
 
   // ── Read URL params from homepage ────────────────────────────────────────
   const params     = new URLSearchParams(window.location.search);
@@ -202,17 +206,11 @@ Respond ONLY with a valid JSON array — no markdown, no explanation, no preambl
 
 match should be a realistic number between 82 and 98. Make each place genuinely different in vibe and area.`;
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 1000 }
-        })
-      }
-    );
+const res = await fetch('/api/recommend', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt })
+});
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
