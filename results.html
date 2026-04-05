@@ -207,7 +207,29 @@ match should be a realistic number between 82 and 98. Make each place genuinely 
     });
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json();
+    const res = await fetch('/api/recommend', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt })
+});
+
+const text = await res.text();
+
+console.log("RAW RESPONSE:", text); // IMPORTANT
+
+if (!text) {
+  alert("Empty response from API");
+  return;
+}
+
+let data;
+try {
+  data = JSON.parse(text);
+} catch (e) {
+  console.error("Invalid JSON:", text);
+  alert("API returned invalid response");
+  return;
+}
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const clean = text.replace(/```json|```/g, '').trim();
     return JSON.parse(clean);
