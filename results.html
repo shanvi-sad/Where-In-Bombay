@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Where in Bombay? | Your Matches</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "outline": "#88726b",
+          "surface-container-low": "#f6f3f2",
+          "on-tertiary-fixed-variant": "#514538",
+          "surface-container": "#f0eded",
+          "primary-fixed": "#ffdbcf",
+          "on-secondary": "#ffffff",
+          "on-primary-container": "#fff9f8",
+          "surface-variant": "#e5e2e1",
+          "secondary-fixed-dim": "#c8c6c5",
+          "primary-fixed-dim": "#ffb59b",
+          "on-error-container": "#93000a",
+          "surface-container-highest": "#e5e2e1",
+          "tertiary-fixed": "#f3dfce",
+          "secondary-container": "#e4e2e1",
+          "outline-variant": "#dbc1b8",
+          "on-tertiary": "#ffffff",
+          "on-secondary-container": "#656464",
+          "background": "#fcf9f8",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed": "#e4e2e1",
+          "surface-container-high": "#eae7e7",
+          "error": "#ba1a1a",
+          "on-primary": "#ffffff",
+          "on-secondary-fixed-variant": "#474746",
+          "inverse-primary": "#ffb59b",
+          "on-tertiary-fixed": "#231a0f",
+          "on-primary-fixed-variant": "#7a2f10",
+          "on-surface-variant": "#55433c",
+          "on-tertiary-container": "#fffaf8",
+          "on-secondary-fixed": "#1b1c1c",
+          "tertiary": "#66594b",
+          "primary-container": "#b35a38",
+          "inverse-on-surface": "#f3f0ef",
+          "error-container": "#ffdad6",
+          "on-error": "#ffffff",
+          "surface-tint": "#994626",
+          "tertiary-fixed-dim": "#d6c3b3",
+          "on-primary-fixed": "#380d00",
+          "surface-bright": "#fcf9f8",
+          "surface-dim": "#dcd9d9",
+          "tertiary-container": "#807163",
+          "on-surface": "#1c1b1b",
+          "inverse-surface": "#313030",
+          "primary": "#944222",
+          "on-background": "#1c1b1b",
+          "surface": "#fcf9f8",
+          "secondary": "#5f5e5e"
+        },
+        borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+        fontFamily: { "headline": ["Newsreader"], "body": ["Manrope"], "label": ["Plus Jakarta Sans"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  body { background-color: #fcf9f8; color: #1c1b1b; }
+
+  /* Loading skeleton pulse */
+  .skeleton { background: linear-gradient(90deg, #eae7e7 25%, #f0eded 50%, #eae7e7 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 0.5rem; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Card fade-in */
+  .card-reveal { opacity: 0; transform: translateY(16px); animation: revealUp 0.5s ease forwards; }
+  @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+  .card-reveal:nth-child(1) { animation-delay: 0.05s; }
+  .card-reveal:nth-child(2) { animation-delay: 0.15s; }
+  .card-reveal:nth-child(3) { animation-delay: 0.25s; }
+</style>
+<script src="config.js"></script>
+</head>
+<body class="font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+<!-- Top Nav -->
+<nav class="fixed top-0 w-full z-50 bg-[#fcf9f8]/70 backdrop-blur-md flex justify-between items-center px-6 py-4">
+  <a href="index.html" class="text-2xl font-serif italic text-[#944222] font-headline">Where in Bombay?</a>
+  <div class="flex items-center gap-6">
+    <div class="hidden md:flex gap-8 text-[#1c1b1b] font-label text-sm uppercase tracking-widest">
+      <a class="text-[#944222] font-bold hover:opacity-80 transition-opacity" href="index.html">Discover</a>
+      <a class="hover:opacity-80 transition-opacity" href="#">My Saves</a>
+    </div>
+    <button class="material-symbols-outlined text-[#944222] hover:opacity-80 transition-opacity">account_circle</button>
+  </div>
+</nav>
+
+<main class="pt-24 pb-20 px-6 max-w-7xl mx-auto">
+
+  <!-- Header -->
+  <header class="mb-16 mt-8">
+    <h1 class="text-5xl md:text-7xl font-headline text-on-background tracking-tight">
+      Bombay's best kept <span class="italic text-primary">raaz</span>,<br>just for you.
+    </h1>
+    <p id="subtitle" class="mt-4 font-label text-on-surface-variant max-w-xl leading-relaxed">
+      Finding the soul of the city for your mood...
+    </p>
+  </header>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="skeleton h-96 w-full"></div>
+    <div class="skeleton h-96 w-full"></div>
+    <div class="skeleton h-64 w-full md:col-span-2"></div>
+  </div>
+
+  <!-- Error State (hidden by default) -->
+  <div id="error-state" class="hidden text-center py-24">
+    <span class="material-symbols-outlined text-5xl text-primary mb-4 block">sentiment_dissatisfied</span>
+    <p class="font-headline italic text-2xl text-on-surface-variant mb-6">Arre, kuch toh gadbad hui...</p>
+    <a href="index.html" class="bg-primary text-white px-8 py-3 rounded-full font-label text-sm uppercase tracking-widest hover:bg-primary-container transition-colors">Try Again</a>
+  </div>
+
+  <!-- Results Grid (populated by JS) -->
+  <div id="results-grid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+  </div>
+
+</main>
+
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-[#fcf9f8]/70 backdrop-blur-md z-50 flex justify-around items-center py-4 px-6">
+  <a href="index.html" class="flex flex-col items-center gap-1 text-[#944222] font-bold">
+    <span class="material-symbols-outlined">explore</span>
+    <span class="font-label text-[10px] uppercase tracking-tighter">Discover</span>
+  </a>
+  <button class="flex flex-col items-center gap-1 text-[#1c1b1b] opacity-60">
+    <span class="material-symbols-outlined">bookmark</span>
+    <span class="font-label text-[10px] uppercase tracking-tighter">Saves</span>
+  </button>
+  <button class="flex flex-col items-center gap-1 text-[#1c1b1b] opacity-60">
+    <span class="material-symbols-outlined">person</span>
+    <span class="font-label text-[10px] uppercase tracking-tighter">Profile</span>
+  </button>
+</nav>
+
+<!-- Floating New Search Button -->
+<a href="index.html" class="fixed bottom-24 right-6 md:bottom-12 md:right-12 bg-gradient-to-br from-[#944222] to-[#b35a38] text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform duration-300 z-40 group">
+  <span class="material-symbols-outlined text-2xl">search</span>
+  <span class="absolute right-full mr-4 bg-surface-container-lowest text-on-surface px-4 py-2 rounded-lg text-sm font-label whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">New Discovery</span>
+</a>
+
+<script>
+  const GEMINI_API_KEY = CONFIG.GEMINI_API_KEY;
+
+  // ── Read URL params from homepage ────────────────────────────────────────
+  const params     = new URLSearchParams(window.location.search);
+  const story      = params.get('story')         || '';
+  const time       = params.get('time')          || '';
+  const price      = params.get('price')         || '';
+  const neighbourhoods = params.get('neighbourhoods') || '';
+
+  // Update subtitle with their story snippet
+  if (story) {
+    const snippet = story.length > 80 ? story.slice(0, 80) + '…' : story;
+    document.getElementById('subtitle').textContent = `"${snippet}"`;
+  }
+
+  // ── Gemini API call ──────────────────────────────────────────────────────
+  async function fetchRecommendations() {
+    const contextParts = [
+      time           && `Time of day: ${time}`,
+      price          && `Budget: ${price}`,
+      neighbourhoods && `Preferred areas: ${neighbourhoods}`,
+    ].filter(Boolean).join('. ');
+
+    const prompt = `You are "The Curator" — a witty, warm, opinionated Mumbai local who has lived in every corner of this city. You speak in a natural Hinglish mix (English with occasional Hindi/Marathi words woven in naturally — like "yaar", "bilkul", "ekdum", "mahaul", "raaz"). You know every hidden gem, every mood, every neighbourhood's heartbeat.
+
+A person has shared their situation with you:
+"${story}"
+${contextParts ? `Additional context: ${contextParts}` : ''}
+
+Based on this, recommend exactly 3 real, well-known Mumbai restaurants, cafes, or bars that genuinely fit their situation. Mix up neighbourhoods. Think beyond the obvious.
+
+Respond ONLY with a valid JSON array — no markdown, no explanation, no preamble:
+[
+  {
+    "name": "Place Name",
+    "neighbourhood": "Area Name",
+    "price": "₹ or ₹₹ or ₹₹₹ or ₹₹₹₹",
+    "match": 97,
+    "curatorQuote": "One punchy sentence in The Curator's Hinglish voice — personal, opinionated, specific. Max 20 words.",
+    "googleSearch": "Place Name Mumbai"
+  }
+]
+
+match should be a realistic number between 82 and 98. Make each place genuinely different in vibe and area.`;
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 1000 }
+        })
+      }
+    );
+
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  }
+
+  // ── Render results into grid ─────────────────────────────────────────────
+  function renderResults(places) {
+    const grid = document.getElementById('results-grid');
+    grid.innerHTML = '';
+
+    places.forEach((place, i) => {
+      const encodedPlace = encodeURIComponent(JSON.stringify(place));
+
+      if (i === 0) {
+        // Large feature card
+        grid.innerHTML += `
+          <a href="detail.html?place=${encodedPlace}" class="card-reveal md:col-span-2 group block">
+            <div class="relative overflow-hidden rounded-xl aspect-[16/9] bg-surface-container-low">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-8 w-full text-white">
+                <div class="flex justify-between items-end">
+                  <div>
+                    <p class="font-label text-xs uppercase tracking-widest text-primary-fixed mb-2">${place.neighbourhood}</p>
+                    <h3 class="text-4xl md:text-5xl font-headline italic">${place.name}</h3>
+                    <p class="mt-2 font-body text-sm text-white/80 max-w-md">${place.curatorQuote}</p>
+                  </div>
+                  <div class="text-right flex-shrink-0 ml-6">
+                    <span class="block font-label text-xs mb-1 opacity-80">MATCH</span>
+                    <span class="text-3xl font-label font-bold text-primary-fixed">${place.match}%</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Placeholder bg for when no image is shown -->
+              <div class="w-full h-full bg-gradient-to-br from-[#b35a38]/30 to-[#944222]/10 absolute inset-0 -z-10"></div>
+            </div>
+            <div class="mt-3 flex justify-between items-center px-2">
+              <span class="font-label text-sm text-on-surface-variant">${place.neighbourhood}</span>
+              <span class="font-label text-sm text-secondary">${place.price}</span>
+            </div>
+          </a>`;
+      } else {
+        // Smaller cards
+        grid.innerHTML += `
+          <a href="detail.html?place=${encodedPlace}" class="card-reveal group block">
+            <div class="bg-surface-container-low rounded-xl overflow-hidden">
+              <div class="aspect-square relative overflow-hidden bg-gradient-to-br from-[#f0eded] to-[#e5e2e1] flex items-center justify-center">
+                <div class="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur px-3 py-1 rounded-full">
+                  <span class="font-label text-xs font-bold text-primary italic">${place.match}% Match</span>
+                </div>
+                <!-- Place name initial as visual placeholder -->
+                <span class="font-headline italic text-7xl text-[#944222]/20 select-none">${place.name.charAt(0)}</span>
+              </div>
+              <div class="p-6">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-2xl font-headline text-on-surface">${place.name}</h3>
+                    <p class="font-label text-sm text-on-surface-variant mt-1">${place.neighbourhood}</p>
+                  </div>
+                  <span class="font-label text-sm font-medium text-secondary">${place.price}</span>
+                </div>
+                <p class="mt-3 font-body text-sm text-on-surface-variant leading-relaxed">${place.curatorQuote}</p>
+              </div>
+            </div>
+          </a>`;
+      }
+    });
+
+    document.getElementById('loading-state').classList.add('hidden');
+    grid.classList.remove('hidden');
+  }
+
+  // ── Show error state ─────────────────────────────────────────────────────
+  function showError() {
+    document.getElementById('loading-state').classList.add('hidden');
+    document.getElementById('error-state').classList.remove('hidden');
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  (async () => {
+    if (!story) {
+      window.location.href = 'index.html';
+      return;
+    }
+    try {
+      const places = await fetchRecommendations();
+      renderResults(places);
+    } catch (err) {
+      console.error(err);
+      showError();
+    }
+  })();
+</script>
+</body>
+</html>
