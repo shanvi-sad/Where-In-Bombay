@@ -156,17 +156,11 @@
 </a>
 
 <script>
-  const res = await fetch('/api/recommend', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ prompt })
-});
-
   // ── Read URL params from homepage ────────────────────────────────────────
-  const params     = new URLSearchParams(window.location.search);
-  const story      = params.get('story')         || '';
-  const time       = params.get('time')          || '';
-  const price      = params.get('price')         || '';
+  const params = new URLSearchParams(window.location.search);
+  const story  = params.get('story')         || '';
+  const time   = params.get('time')          || '';
+  const price  = params.get('price')         || '';
   const neighbourhoods = params.get('neighbourhoods') || '';
 
   // Update subtitle with their story snippet
@@ -175,9 +169,9 @@
     document.getElementById('subtitle').textContent = `"${snippet}"`;
   }
 
-  // ── Gemini API call ──────────────────────────────────────────────────────
+  // ── Gemini API call via Vercel function ──────────────────────────────────
   async function fetchRecommendations() {
-    sessionStorage.setItem('wib_story', story); // ← add this line
+    sessionStorage.setItem('wib_story', story);
     const contextParts = [
       time           && `Time of day: ${time}`,
       price          && `Budget: ${price}`,
@@ -206,11 +200,11 @@ Respond ONLY with a valid JSON array — no markdown, no explanation, no preambl
 
 match should be a realistic number between 82 and 98. Make each place genuinely different in vibe and area.`;
 
-const res = await fetch('/api/recommend', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ prompt })
-});
+    const res = await fetch('/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
 
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
@@ -228,7 +222,6 @@ const res = await fetch('/api/recommend', {
       const encodedPlace = encodeURIComponent(JSON.stringify(place));
 
       if (i === 0) {
-        // Large feature card
         grid.innerHTML += `
           <a href="detail.html?place=${encodedPlace}" class="card-reveal md:col-span-2 group block">
             <div class="relative overflow-hidden rounded-xl aspect-[16/9] bg-surface-container-low">
@@ -245,7 +238,6 @@ const res = await fetch('/api/recommend', {
                   </div>
                 </div>
               </div>
-              <!-- Placeholder bg for when no image is shown -->
               <div class="w-full h-full bg-gradient-to-br from-[#b35a38]/30 to-[#944222]/10 absolute inset-0 -z-10"></div>
             </div>
             <div class="mt-3 flex justify-between items-center px-2">
@@ -254,7 +246,6 @@ const res = await fetch('/api/recommend', {
             </div>
           </a>`;
       } else {
-        // Smaller cards
         grid.innerHTML += `
           <a href="detail.html?place=${encodedPlace}" class="card-reveal group block">
             <div class="bg-surface-container-low rounded-xl overflow-hidden">
@@ -262,7 +253,6 @@ const res = await fetch('/api/recommend', {
                 <div class="absolute top-4 right-4 bg-surface-container-lowest/90 backdrop-blur px-3 py-1 rounded-full">
                   <span class="font-label text-xs font-bold text-primary italic">${place.match}% Match</span>
                 </div>
-                <!-- Place name initial as visual placeholder -->
                 <span class="font-headline italic text-7xl text-[#944222]/20 select-none">${place.name.charAt(0)}</span>
               </div>
               <div class="p-6">
